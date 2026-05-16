@@ -74,6 +74,7 @@ func InitElasticsearchBackend() {
     ESBackend = &ElasticsearchBackend{client: client}
 }
 
+// input index represent database name
 func (backend *ElasticsearchBackend) ReadFromES(query elastic.Query, index string) (*elastic.SearchResult, error) {
    searchResult, err := backend.client.Search().
        Index(index).

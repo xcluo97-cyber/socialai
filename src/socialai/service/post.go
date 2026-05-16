@@ -4,10 +4,12 @@ import (
    "socialai/backend"
    "socialai/constants"
    "socialai/model"
+   "mime/multipart"
    "reflect"
 
    "github.com/olivere/elastic/v7"
 )
+
 
 func SearchPostsByUser(user string) ([]model.Post, error) {
    // 1. create a query
