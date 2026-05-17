@@ -1,13 +1,15 @@
 package handler
 
 import (
-   "socialai/model"
-   "socialai/service"
    "encoding/json"
    "fmt"
    "net/http"
    "path/filepath"
+   "socialai/model"
+   "socialai/service"
 
+
+   jwt "github.com/form3tech-oss/jwt-go"
    "github.com/pborman/uuid"
 )
 
@@ -28,13 +30,22 @@ var (
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
    fmt.Println("Received one upload request")
-   // 1. process the request
-   // form data -> go struct
+   // 1. process Request
+   // 1.1 form-data text -> Post
+   // 1.2 geerate id
+   // 1.3 form-data file -> file
+   // 1.4 file -> type
+
+   token := r.Context().Value("user") // user:token <- jwt middleware
+   claims := token.(*jwt.Token).Claims
+   username := claims.(jwt.MapClaims)["username"]
+
    p := model.Post{
        Id:      uuid.New(),
-       User:    r.FormValue("user"),
+       User:    username.(string),
        Message: r.FormValue("message"),
    }
+
 
    file, header, err := r.FormFile("media_file")
    if err != nil {
